@@ -43,3 +43,10 @@ def test_every_static_file_is_served():
 def test_page_has_phone_viewport_and_dark_mode():
     assert "width=device-width" in (STATIC / "index.html").read_text(encoding="utf-8")
     assert "prefers-color-scheme: dark" in (STATIC / "style.css").read_text(encoding="utf-8")
+
+
+def test_a_slow_page_cannot_replace_a_newer_one():
+    """Data that arrives after the reader moved on is dropped (seen on GitHub Pages: the list rewrote the address)."""
+    js = (STATIC / "app.js").read_text(encoding="utf-8")
+    assert "routeNo += 1" in js and "if (asked !== routeNo) throw new StalePage()" in js
+    assert "if (e instanceof StalePage) return;" in js

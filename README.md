@@ -82,7 +82,7 @@ must sit at the repo root; it is not in git.
    warehouse tests), because dropping the database also drops that user and the next cube processing then fails with a
    login error. It is idempotent. See [sql/README.md](sql/README.md) for details.
 
-4. Run the tests (868 tests, about 100 s: 860 run offline, 8 are skipped by default: the 6 warehouse tests below and 2 live cube
+4. Run the tests (869 tests, about 100 s: 861 run offline, 8 are skipped by default: the 6 warehouse tests below and 2 live cube
    tests of step 5; the audit tests of step 4b skip themselves when the warehouse is not built):
 
    ```

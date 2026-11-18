@@ -8,7 +8,7 @@ Run of the plan in [test-plan.md](test-plan.md) on 2026-11-15, on the project ma
 
 | ID | Test | Result |
 |---|---|---|
-| A1 | Offline pytest | 860 passed, 8 skipped by design (868 tests, including the website tests, one control-character check per tracked text file, and, since 2026-11-17, one page-limit check per body code block, now 10 instead of 28; since 2026-11-18 also the layout markers, the 28 screenshots and the PDF page and half-page limits) |
+| A1 | Offline pytest | 861 passed, 8 skipped by design (869 tests, including the website tests, one control-character check per tracked text file, and, since 2026-11-17, one page-limit check per body code block, now 10 instead of 28; since 2026-11-18 also the layout markers, the 28 screenshots and the PDF page and half-page limits) |
 | A2 | Opt-in warehouse tests (rebuild of FlightDW) | 6 of 6 passed (after fix 1) |
 | A3 | Opt-in live cube tests and spec tests | 254 passed |
 | B1 | Pipeline run three times | all 9 CSV files byte-identical (SHA-256); eight other seeds also give 17/17 rules and a different fact table |
@@ -33,7 +33,7 @@ Run of the plan in [test-plan.md](test-plan.md) on 2026-11-15, on the project ma
 | H1 | Broken input to the pipeline | missing file, missing column, header-only table and 500 instead of 600 rows all stop with exit code and no output; two messages were unclear (fix 4) |
 | J1 to J4 | Local website (added after the campaign) | 57 new tests (data layer, live runner, server, static pages): 644 passed, 8 skipped (652 tests); every page checked in the browser at desktop and 375 px width, light and dark, no horizontal scroll; "Run live on the cube" on a ranked statement returned the same 11 rows in 2.6 s and `git status` showed no changed result file |
 | J5 | Website redesign (2026-11-18) | dashboard layout with five pages (overview, data and preprocessing, analyses with operation filter, stopovers, report and requirements); each analysis shows its SSMS screenshot; 11 new tests (project, profile, requirements, screenshot and report routes, snapshot fallback); every page checked in the browser at 1280 px and 375 px (no horizontal scroll) and in dark mode; filter, search, tooltip, PDF and screenshot links exercised |
-| J6 | Static copy for GitHub Pages (2026-11-18) | `tools/build_static_site.py` saves every API answer as a file; 5 new tests; served by a plain file server under a sub-path (as on GitHub Pages): all pages load, no broken image, the PDF opens, the live button is replaced by a note |
+| J6 | Static copy for GitHub Pages (2026-11-18) | `tools/build_static_site.py` saves every API answer as a file; 5 new tests; served by a plain file server under a sub-path (as on GitHub Pages): all pages load, no broken image, the PDF opens, the live button is replaced by a note. On the hosted site (slow network) a page whose data arrived after the reader had moved on rewrote the address bar; each navigation now has a number and older answers are dropped (reproduced with a delayed request before and after the fix; `test_a_slow_page_cannot_replace_a_newer_one`) |
 | I1 | Hygiene | no e-mail address, token or password in tracked files; the personal path in the SSIS package was removed (fix 3) |
 
 ## Defects found and fixed
