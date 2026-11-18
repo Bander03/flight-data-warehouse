@@ -23,7 +23,8 @@ def site(tmp_path_factory):
 def test_index_is_marked_static_and_uses_relative_paths(site):
     html = (site / "index.html").read_text(encoding="utf-8")
     assert 'data-site="static"' in html
-    assert '"static/style.css"' in html and '"static/app.js"' in html and '"/static/' not in html
+    assert re.search(r'"static/style\.css\?v=[0-9a-f]{10}"', html) and re.search(r'"static/app\.js\?v=[0-9a-f]{10}"', html)
+    assert '"/static/' not in html
 
 
 def test_every_api_answer_is_a_file(site):

@@ -8,6 +8,7 @@ screenshots/*.jpg, figures/*.png and report.pdf next to it, by relative paths. "
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import shutil
 import sys
@@ -32,6 +33,10 @@ def build(out: Path, pdf: Path | None = None) -> Path:
     (out / "static").mkdir(parents=True)
     html = (STATIC / "index.html").read_text(encoding="utf-8")
     html = html.replace('<html lang="en">', '<html lang="en" data-site="static">', 1).replace('"/static/', '"static/')
+    # GitHub Pages lets browsers keep files for 10 minutes: a version in the link makes a changed file load anew
+    for name in ("app.js", "style.css"):
+        version = hashlib.sha256((STATIC / name).read_bytes()).hexdigest()[:10]
+        html = html.replace(f'"static/{name}"', f'"static/{name}?v={version}"')
     (out / "index.html").write_text(html, encoding="utf-8")
     for f in STATIC.iterdir():
         if f.name != "index.html":
