@@ -34,10 +34,18 @@ function h(tag, attrs, ...kids) {
   return el;
 }
 
+/* Each navigation gets a new number; data that arrives for an older page is dropped, so a slow page can never
+   replace the page the reader has moved on to. */
+let routeNo = 0;
+class StalePage extends Error {}
+
 async function api(path, options) {
+  const asked = routeNo;
   const res = await fetch(url(path), options);
   if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-  return res.json();
+  const body = await res.json();
+  if (asked !== routeNo) throw new StalePage();
+  return body;
 }
 
 const n = v => Number(v).toLocaleString("en-US");
@@ -413,6 +421,7 @@ async function reportPage() {
 
 /* ---------- router ---------- */
 async function route() {
+  routeNo += 1;
   const raw = location.hash.replace(/^#/, "") || "/";
   const [path, qs] = raw.split("?");
   const query = new URLSearchParams(qs || "");
@@ -425,6 +434,7 @@ async function route() {
     else if (path.startsWith("/analysis/")) await analysisPage(decodeURIComponent(path.slice("/analysis/".length)));
     else show(pageHead(null, "Page not found", null), h("p", null, h("a", { href: "#/" }, "Back to the overview")));
   } catch (e) {
+    if (e instanceof StalePage) return;
     show(pageHead(null, "Something went wrong", "The page could not load its data (" + e.message + "). Is the server still running?"),
       h("p", null, h("a", { href: "#/" }, "Back to the overview")));
   }
