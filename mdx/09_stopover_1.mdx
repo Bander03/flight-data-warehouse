@@ -1,0 +1,10 @@
+-- Operation: Stopover analysis (Transit Airport, top 5 hubs)
+-- Question: Which five transit airports (hubs, 'No stopover' excluded) carry the most ticket revenue on segments with a stopover?
+-- Measure: Total Price
+-- Answer key: mdx/answers/09_stopover_1.sql
+-- Hubs: TOPCOUNT over the transit airports after EXCEPT removes 'No stopover' (&[0]).
+WITH MEMBER [Measures].[Value] AS [Measures].[Total Price]
+SELECT {[Measures].[Value]} ON COLUMNS,
+  TOPCOUNT(EXCEPT([Transit Airport].[Geography].[Airport].Members,
+                  {[Transit Airport].[Geography].[Airport].&[0]}), 5, [Measures].[Total Price]) ON ROWS
+FROM [FlightCube]

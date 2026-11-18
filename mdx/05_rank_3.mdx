@@ -1,0 +1,13 @@
+-- Operation: Rank (Price Range: Price Grade)
+-- Question: How do the price grades (300-yuan price bands, grade g = 300g to 300(g+1)) rank by total ticket revenue?
+-- Measure: Total Price
+-- Answer key: mdx/answers/05_rank_3.sql
+-- RANK the price grades with revenue (attribute hierarchy [Price Range].[Price Grade], captions '0'..'29').
+WITH SET [Ranked Grades] AS
+  ORDER(FILTER([Price Range].[Price Grade].[Price Grade].Members, NOT ISEMPTY([Measures].[Total Price])),
+        [Measures].[Total Price], BDESC)
+MEMBER [Measures].[Value] AS [Measures].[Total Price]
+MEMBER [Measures].[Rank] AS RANK([Price Range].[Price Grade].CurrentMember, [Ranked Grades], [Measures].[Total Price])
+SELECT {[Measures].[Rank], [Measures].[Value]} ON COLUMNS,
+  [Ranked Grades] ON ROWS
+FROM [FlightCube]

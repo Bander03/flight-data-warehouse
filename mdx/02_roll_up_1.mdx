@@ -1,0 +1,10 @@
+-- Operation: Roll up (Departure Date: Day to Month)
+-- Question: What was the total ticket revenue per departure month when the daily figures are rolled up to months?
+-- Measure: Total Price
+-- Answer key: mdx/answers/02_roll_up_1.sql
+-- Roll every departure day with data up to its parent month (.Parent; GENERATE removes duplicates, day order = month order).
+WITH MEMBER [Measures].[Value] AS [Measures].[Total Price]
+SELECT {[Measures].[Value]} ON COLUMNS,
+  GENERATE(NONEMPTY([Departure Date].[Calendar].[Day].Members, [Measures].[Segment Count]),
+           {[Departure Date].[Calendar].CurrentMember.Parent}) ON ROWS
+FROM [FlightCube]

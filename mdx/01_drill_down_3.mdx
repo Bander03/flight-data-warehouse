@@ -1,0 +1,9 @@
+-- Operation: Drill down (Flight: Airline to Flight No)
+-- Question: Which flight numbers does Air China (CA) operate in the data, and how much ticket revenue did each of them bring in?
+-- Measure: Total Price
+-- Answer key: mdx/answers/01_drill_down_3.sql
+-- Drill one step down from airline CA (AirlineKey 1, 中国国际航空) to its flight numbers (DESCENDANTS by distance).
+WITH MEMBER [Measures].[Value] AS [Measures].[Total Price]
+SELECT {[Measures].[Value]} ON COLUMNS,
+  NON EMPTY DESCENDANTS([Flight].[Airline Flight].[Airline].&[1], 1) ON ROWS
+FROM [FlightCube]

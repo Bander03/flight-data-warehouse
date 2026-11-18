@@ -1,0 +1,15 @@
+-- Operation: Stopover analysis (Transit Airport: stopover vs direct)
+-- Question: Is the average ticket price of segments with a stopover higher than that of direct segments?
+-- Measure: Average Price
+-- Answer key: mdx/answers/09_stopover_2.sql
+-- Keeps 'No stopover' on purpose: the real member &[0] (caption 'No stopover') against the calculated member
+-- 'With stopover' = AGGREGATE of all other transit airports. Value divides base measures with a higher
+-- SOLVE_ORDER so the ratio is taken of the aggregated sums (not an aggregate of ratios).
+WITH MEMBER [Transit Airport].[Geography].[With stopover] AS
+  AGGREGATE(EXCEPT([Transit Airport].[Geography].[Airport].Members,
+                   {[Transit Airport].[Geography].[Airport].&[0]})), SOLVE_ORDER = 1
+MEMBER [Measures].[Value] AS
+  IIF([Measures].[Segment Count] = 0, NULL, [Measures].[Total Price] / [Measures].[Segment Count]), SOLVE_ORDER = 10
+SELECT {[Measures].[Value]} ON COLUMNS,
+  {[Transit Airport].[Geography].[Airport].&[0], [Transit Airport].[Geography].[With stopover]} ON ROWS
+FROM [FlightCube]

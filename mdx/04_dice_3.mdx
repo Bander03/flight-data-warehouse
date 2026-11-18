@@ -1,0 +1,11 @@
+-- Operation: Dice (Passenger FFP Tier x Cabin Class)
+-- Question: How many different passengers of the top frequent-flyer tiers 5 and 6 flew in business class (C) and in economy class (Y)?
+-- Measure: Distinct Passengers
+-- Answer key: mdx/answers/04_dice_3.sql
+-- Dice over two dimensions: Passenger FFP tiers 5, 6 x Cabin classes C, Y (four cells).
+-- Distinct Passengers is evaluated per tuple by the cube (distinct count, not a sum).
+WITH MEMBER [Measures].[Value] AS [Measures].[Distinct Passengers]
+SELECT {[Measures].[Value]} ON COLUMNS,
+  NON EMPTY {[Passenger].[FFP Tier].&[5], [Passenger].[FFP Tier].&[6]}
+          * {[Cabin].[Cabin Class].&[C], [Cabin].[Cabin Class].&[Y]} ON ROWS
+FROM [FlightCube]

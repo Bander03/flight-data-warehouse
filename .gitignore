@@ -1,0 +1,45 @@
+# Course materials and raw data: share by drive, not git (large / instructor-provided)
+0 2026_DW project Guides_for students/
+0 2026_DW project_data set_1 Fact+ 8 Dim for 1 Group/
+*.rar
+*.pdf
+TeracherNotes.txt
+
+# Data files (regenerate with preprocessing scripts)
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+*.xlsx
+*.xls
+*.csv
+!mdx/results/*.csv
+*.bak
+*.mdf
+*.ldf
+
+# Visual Studio / SSAS / SSIS build output
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.asdatabase
+*.cube.xml.bak
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Office temp files and OS junk
+~$*
+.DS_Store
+Thumbs.db
+
+# generated report build output
+report/build/
+
+# static copy of the website (tools/build_static_site.py)
+site/

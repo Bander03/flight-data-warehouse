@@ -1,0 +1,5 @@
+-- Smoke test of the cube FlightCube (report figure C4): the totals over all 600 fact rows.
+-- Expected: Segment Count 600, Stopover Segments 95, Total Price 1,400,460, Distinct Passengers 599.
+SELECT { [Measures].[Segment Count], [Measures].[Stopover Segments], [Measures].[Total Price],
+         [Measures].[Distinct Passengers], [Measures].[Average Price], [Measures].[Stopover Share] } ON COLUMNS
+FROM [FlightCube]

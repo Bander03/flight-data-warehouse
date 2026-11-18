@@ -1,0 +1,13 @@
+-- Operation: Rank (Departure Airport)
+-- Question: Among the departure airports with at least 10 segments, how do they rank by total ticket revenue?
+-- Measure: Total Price
+-- Answer key: mdx/answers/05_rank_2.sql
+-- FILTER departure airports with at least 10 segments, then RANK them by revenue (ties share a rank).
+WITH SET [Busy Airports] AS
+  ORDER(FILTER([Departure Airport].[Geography].[Airport].Members, [Measures].[Segment Count] >= 10),
+        [Measures].[Total Price], BDESC)
+MEMBER [Measures].[Value] AS [Measures].[Total Price]
+MEMBER [Measures].[Rank] AS RANK([Departure Airport].[Geography].CurrentMember, [Busy Airports], [Measures].[Total Price])
+SELECT {[Measures].[Rank], [Measures].[Value]} ON COLUMNS,
+  [Busy Airports] ON ROWS
+FROM [FlightCube]

@@ -1,0 +1,12 @@
+-- Operation: Running total (Arrival Date: Month)
+-- Question: How many segments have arrived cumulatively by the end of each month of 2021?
+-- Measure: Segment Count
+-- Answer key: mdx/answers/08_running_total_2.sql
+-- Cumulative arrivals: SUM over the range from the year's first month (OPENINGPERIOD) to the current month.
+WITH MEMBER [Measures].[Value] AS
+  SUM({OPENINGPERIOD([Arrival Date].[Calendar].[Month],
+                     ANCESTOR([Arrival Date].[Calendar].CurrentMember, [Arrival Date].[Calendar].[Year]))
+       : [Arrival Date].[Calendar].CurrentMember}, [Measures].[Segment Count])
+SELECT {[Measures].[Value]} ON COLUMNS,
+  NONEMPTY([Arrival Date].[Calendar].[Month].Members, [Measures].[Segment Count]) ON ROWS
+FROM [FlightCube]

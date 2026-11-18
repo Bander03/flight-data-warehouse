@@ -1,0 +1,15 @@
+-- Operation: Top N (Departure Airport x Landing Airport = route, N = 5)
+-- Question: Which five routes (departure airport to landing airport) bring in the most ticket revenue?
+-- Measure: Total Price
+-- Answer key: mdx/answers/06_top_n_1.sql
+-- TOPCOUNT over departure x landing airport tuples (routes); Rank = position in the TOPCOUNT result.
+WITH SET [Top Routes] AS
+  TOPCOUNT(NONEMPTY([Departure Airport].[Geography].[Airport].Members
+                    * [Landing Airport].[Geography].[Airport].Members, [Measures].[Total Price]),
+           5, [Measures].[Total Price])
+MEMBER [Measures].[Value] AS [Measures].[Total Price]
+MEMBER [Measures].[Rank] AS
+  RANK(([Departure Airport].[Geography].CurrentMember, [Landing Airport].[Geography].CurrentMember), [Top Routes])
+SELECT {[Measures].[Rank], [Measures].[Value]} ON COLUMNS,
+  [Top Routes] ON ROWS
+FROM [FlightCube]

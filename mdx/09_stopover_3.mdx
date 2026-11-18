@@ -1,0 +1,12 @@
+-- Operation: Stopover analysis (Airline)
+-- Question: What share of each airline's segments includes a stopover?
+-- Measure: Stopover Share
+-- Answer key: mdx/answers/09_stopover_3.sql
+-- Stopover share per airline = (all segments - segments at transit 'No stopover' &[0]) / all segments.
+WITH MEMBER [Measures].[Value] AS
+  IIF([Measures].[Segment Count] = 0, NULL,
+      ([Measures].[Segment Count] - ([Measures].[Segment Count], [Transit Airport].[Geography].[Airport].&[0]))
+      / [Measures].[Segment Count])
+SELECT {[Measures].[Value]} ON COLUMNS,
+  NON EMPTY [Flight].[Airline Flight].[Airline].Members ON ROWS
+FROM [FlightCube]

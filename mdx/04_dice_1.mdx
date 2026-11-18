@@ -1,0 +1,12 @@
+-- Operation: Dice (Departure Airport province x Departure Date quarter)
+-- Question: How many segments departed from Shanghai (上海) and Beijing (北京) in 2021 Q1 and 2021 Q2?
+-- Measure: Segment Count
+-- Answer key: mdx/answers/04_dice_1.sql
+-- Dice: two provinces x two quarters (crossjoin of two filtered member sets on two dimensions).
+WITH MEMBER [Measures].[Value] AS [Measures].[Segment Count]
+SELECT {[Measures].[Value]} ON COLUMNS,
+  NON EMPTY {[Departure Airport].[Geography].[Province].&[上海],
+             [Departure Airport].[Geography].[Province].&[北京]}
+          * {[Departure Date].[Calendar].[Quarter].&[2021 Q1],
+             [Departure Date].[Calendar].[Quarter].&[2021 Q2]} ON ROWS
+FROM [FlightCube]

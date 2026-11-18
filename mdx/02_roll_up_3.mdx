@@ -1,0 +1,13 @@
+-- Operation: Roll up (Flight: Flight No to Airline)
+-- Question: How many different passengers flew with each airline when the flight-number figures are rolled up to airlines?
+-- Measure: Distinct Passengers
+-- Answer key: mdx/answers/02_roll_up_3.sql
+-- Roll flight numbers up to airlines: ASCENDANTS of each flight number, keep the Airline level (ordinal 1).
+-- Distinct Passengers is evaluated by the cube at airline level (never summed over flight numbers).
+WITH MEMBER [Measures].[Value] AS [Measures].[Distinct Passengers]
+SELECT {[Measures].[Value]} ON COLUMNS,
+  HIERARCHIZE(FILTER(
+    GENERATE(NONEMPTY([Flight].[Airline Flight].[Flight No].Members, [Measures].[Segment Count]),
+             ASCENDANTS([Flight].[Airline Flight].CurrentMember)),
+    [Flight].[Airline Flight].CurrentMember.Level.Ordinal = 1)) ON ROWS
+FROM [FlightCube]

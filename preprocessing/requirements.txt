@@ -1,0 +1,8 @@
+# Tested on Python 3.10.5 with pandas 2.3.3, numpy 2.2.6, openpyxl 3.1.5, pytest 9.2.0, python-docx 1.2.0, matplotlib 3.8.4, Pillow 12.3.0 (Python 3.10 to 3.12).
+pandas>=2.2,<3
+numpy>=2.2,<3
+openpyxl==3.1.5
+pytest==9.2.0
+python-docx>=1.1,<2      # report builder (tools/build_report.py) and its tests
+matplotlib>=3.8,<4       # star schema and SSIS figures (tools/make_*_diagram.py)
+pillow>=10,<13           # figure sizes in the report builder

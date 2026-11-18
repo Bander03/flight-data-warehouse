@@ -1,0 +1,10 @@
+-- Operation: Slice (Departure Date: Is Spring Festival = Yes)
+-- Question: What was the average ticket price per cabin class for segments that departed during the Spring Festival period (2021-02-11 to 2021-02-17)?
+-- Measure: Average Price
+-- Answer key: mdx/answers/03_slice_3.sql
+-- Slice on the Spring Festival flag of the departure date (&[1] = Yes); rows are the cabin classes.
+WITH MEMBER [Measures].[Value] AS [Measures].[Average Price]
+SELECT {[Measures].[Value]} ON COLUMNS,
+  NON EMPTY [Cabin].[Cabin Class].[Cabin Class].Members ON ROWS
+FROM [FlightCube]
+WHERE ([Departure Date].[Is Spring Festival].&[1])

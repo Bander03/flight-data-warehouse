@@ -1,0 +1,10 @@
+# Line endings: the repository stores LF; working copies follow the rules below on every machine,
+# regardless of core.autocrlf. Tools write CSV/Markdown with LF, so these files never show phantom changes.
+*.csv  text eol=lf
+*.xmla text eol=lf
+*.mdx  text eol=lf
+*.sql  text eol=lf
+*.md   text eol=lf
+*.py   text eol=lf
+*.ps1  text eol=crlf
+*.png  binary

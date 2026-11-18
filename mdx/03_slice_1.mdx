@@ -1,0 +1,10 @@
+-- Operation: Slice (Cabin: Cabin Class = Y)
+-- Question: How much ticket revenue did each airline earn from economy-class (cabin Y) segments only?
+-- Measure: Total Price
+-- Answer key: mdx/answers/03_slice_1.sql
+-- Slice the cube on cabin class Y in the WHERE slicer; airlines without Y revenue drop out (NON EMPTY).
+WITH MEMBER [Measures].[Value] AS [Measures].[Total Price]
+SELECT {[Measures].[Value]} ON COLUMNS,
+  NON EMPTY [Flight].[Airline Flight].[Airline].Members ON ROWS
+FROM [FlightCube]
+WHERE ([Cabin].[Cabin Class].&[Y])

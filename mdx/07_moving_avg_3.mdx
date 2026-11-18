@@ -1,0 +1,12 @@
+-- Operation: Moving average, 7 days (Departure Date: Day)
+-- Question: What is the 7-day moving average of the daily number of departing segments on each February 2021 day with departures (current and six previous calendar days, averaged over the days that have departures)?
+-- Measure: Segment Count
+-- Answer key: mdx/answers/07_moving_avg_3.sql
+-- Day grain: LASTPERIODS(7, day) = the current and six previous calendar days (crosses into January for early
+-- February); AVG skips empty days. Rows: the day range 2021-02-01 (&[32]) : 2021-02-28 (&[59]), days with data.
+WITH MEMBER [Measures].[Value] AS
+  AVG(LASTPERIODS(7, [Departure Date].[Calendar].CurrentMember), [Measures].[Segment Count])
+SELECT {[Measures].[Value]} ON COLUMNS,
+  NONEMPTY({[Departure Date].[Calendar].[Day].&[32] : [Departure Date].[Calendar].[Day].&[59]},
+           [Measures].[Segment Count]) ON ROWS
+FROM [FlightCube]

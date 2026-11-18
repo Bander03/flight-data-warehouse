@@ -1,0 +1,12 @@
+-- Operation: Moving average, 3 months (Arrival Date: Month)
+-- Question: What is the 3-month moving average of the number of segments arriving per month (current and two previous months; the first two months use the months available)?
+-- Measure: Segment Count
+-- Answer key: mdx/answers/07_moving_avg_2.sql
+-- AVG over the range month.Lag(2) : month; for January and February Lag(2) is NULL, so the range is open-ended
+-- and starts at the first month (January), i.e. uses the months available.
+WITH MEMBER [Measures].[Value] AS
+  AVG({[Arrival Date].[Calendar].CurrentMember.Lag(2) : [Arrival Date].[Calendar].CurrentMember},
+      [Measures].[Segment Count])
+SELECT {[Measures].[Value]} ON COLUMNS,
+  NONEMPTY([Arrival Date].[Calendar].[Month].Members, [Measures].[Segment Count]) ON ROWS
+FROM [FlightCube]

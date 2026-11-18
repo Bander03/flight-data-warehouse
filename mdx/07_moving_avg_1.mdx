@@ -1,0 +1,11 @@
+-- Operation: Moving average, 3 months (Departure Date: Month)
+-- Question: What is the 3-month moving average of monthly ticket revenue by departure month (current and two previous months; the first two months use the months available)?
+-- Measure: Total Price
+-- Answer key: mdx/answers/07_moving_avg_1.sql
+-- AVG over LASTPERIODS(3, month): current and two previous months (fewer at the start of 2021).
+-- Rows: months with segments only (NON EMPTY would keep September, whose 3-month window is not empty).
+WITH MEMBER [Measures].[Value] AS
+  AVG(LASTPERIODS(3, [Departure Date].[Calendar].CurrentMember), [Measures].[Total Price])
+SELECT {[Measures].[Value]} ON COLUMNS,
+  NONEMPTY([Departure Date].[Calendar].[Month].Members, [Measures].[Segment Count]) ON ROWS
+FROM [FlightCube]

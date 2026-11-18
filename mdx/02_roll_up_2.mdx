@@ -1,0 +1,10 @@
+-- Operation: Roll up (Landing Airport: Airport to Province)
+-- Question: How many kilometres were flown into each landing province when the airport figures are rolled up to provinces?
+-- Measure: Total Mileage
+-- Answer key: mdx/answers/02_roll_up_2.sql
+-- Roll every landing airport with data up to its province (ANCESTOR), shown in hierarchy order.
+WITH MEMBER [Measures].[Value] AS [Measures].[Total Mileage]
+SELECT {[Measures].[Value]} ON COLUMNS,
+  HIERARCHIZE(GENERATE(NONEMPTY([Landing Airport].[Geography].[Airport].Members, [Measures].[Segment Count]),
+    {ANCESTOR([Landing Airport].[Geography].CurrentMember, [Landing Airport].[Geography].[Province])})) ON ROWS
+FROM [FlightCube]

@@ -1,0 +1,14 @@
+-- Operation: Stopover analysis (Departure x Landing Airport, all segments via a stopover)
+-- Question: On which routes (departure airport to landing airport) does every segment make a stopover?
+-- Measure: Segment Count
+-- Answer key: mdx/answers/09_stopover_4.sql
+-- Routes whose 'No stopover' (&[0]) cell is empty, i.e. every segment has a stopover; Value counts the
+-- segments over the real transit airports (EXCEPT &[0]), which equals all segments of such a route.
+WITH MEMBER [Measures].[Value] AS
+  SUM(EXCEPT([Transit Airport].[Geography].[Airport].Members,
+             {[Transit Airport].[Geography].[Airport].&[0]}), [Measures].[Segment Count])
+SELECT {[Measures].[Value]} ON COLUMNS,
+  FILTER(NONEMPTY([Departure Airport].[Geography].[Airport].Members
+                  * [Landing Airport].[Geography].[Airport].Members, [Measures].[Segment Count]),
+         ISEMPTY(([Measures].[Segment Count], [Transit Airport].[Geography].[Airport].&[0]))) ON ROWS
+FROM [FlightCube]

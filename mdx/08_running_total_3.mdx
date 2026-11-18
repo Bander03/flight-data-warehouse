@@ -1,0 +1,12 @@
+-- Operation: Running total (Departure Date: Month)
+-- Question: How many segments with a stopover have departed cumulatively by the end of each month of 2021?
+-- Measure: Stopover Segments
+-- Answer key: mdx/answers/08_running_total_3.sql
+-- Cumulative stopover segments: SUM over the fixed-start range January 2021 : current month.
+-- Rows filter on Segment Count so a month with zero stopovers still appears (as in the key).
+WITH MEMBER [Measures].[Value] AS
+  SUM({[Departure Date].[Calendar].[Month].&[2021-01] : [Departure Date].[Calendar].CurrentMember},
+      [Measures].[Stopover Segments])
+SELECT {[Measures].[Value]} ON COLUMNS,
+  FILTER([Departure Date].[Calendar].[Month].Members, [Measures].[Segment Count] > 0) ON ROWS
+FROM [FlightCube]

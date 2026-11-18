@@ -1,0 +1,10 @@
+-- Operation: Dice (Plane Size Class x Cabin Class)
+-- Question: How much ticket revenue did wide-body and narrow-body aircraft earn in business class (C) and in first class (F)?
+-- Measure: Total Price
+-- Answer key: mdx/answers/04_dice_2.sql
+-- Dice: size classes Narrow (&[2]) and Wide (&[3]) x cabin classes C and F (CROSSJOIN of two dimensions).
+WITH MEMBER [Measures].[Value] AS [Measures].[Total Price]
+SELECT {[Measures].[Value]} ON COLUMNS,
+  NON EMPTY CROSSJOIN({[Plane].[Plane Class].[Size Class].&[2], [Plane].[Plane Class].[Size Class].&[3]},
+                      {[Cabin].[Cabin Class].&[C], [Cabin].[Cabin Class].&[F]}) ON ROWS
+FROM [FlightCube]

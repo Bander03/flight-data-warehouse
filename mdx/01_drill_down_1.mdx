@@ -1,0 +1,9 @@
+-- Operation: Drill down (Departure Date: Quarter to Month)
+-- Question: Which months make up 2021 Q1, and how many flight segments departed in each of them?
+-- Measure: Segment Count
+-- Answer key: mdx/answers/01_drill_down_1.sql
+-- Drill from the quarter member 2021 Q1 to its child months (.Children).
+WITH MEMBER [Measures].[Value] AS [Measures].[Segment Count]
+SELECT {[Measures].[Value]} ON COLUMNS,
+  NON EMPTY [Departure Date].[Calendar].[Quarter].&[2021 Q1].Children ON ROWS
+FROM [FlightCube]

@@ -1,0 +1,12 @@
+-- Operation: Rank (Airline)
+-- Question: How do the airlines rank by total ticket revenue?
+-- Measure: Total Price
+-- Answer key: mdx/answers/05_rank_1.sql
+-- RANK over the airlines ordered by revenue; the third argument makes tied airlines share a rank (as SQL RANK).
+WITH SET [Ranked Airlines] AS
+  ORDER(NONEMPTY([Flight].[Airline Flight].[Airline].Members, [Measures].[Total Price]), [Measures].[Total Price], BDESC)
+MEMBER [Measures].[Value] AS [Measures].[Total Price]
+MEMBER [Measures].[Rank] AS RANK([Flight].[Airline Flight].CurrentMember, [Ranked Airlines], [Measures].[Total Price])
+SELECT {[Measures].[Rank], [Measures].[Value]} ON COLUMNS,
+  [Ranked Airlines] ON ROWS
+FROM [FlightCube]

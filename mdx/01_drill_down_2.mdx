@@ -1,0 +1,10 @@
+-- Operation: Drill down (Departure Airport: Province to Airport)
+-- Question: Which departure airports does Shanghai (province 上海) have, and what is the average ticket price of the segments leaving each of them?
+-- Measure: Average Price
+-- Answer key: mdx/answers/01_drill_down_2.sql
+-- Drill from the province 上海 to its airports on the Geography hierarchy (DESCENDANTS to a level).
+WITH MEMBER [Measures].[Value] AS [Measures].[Average Price]
+SELECT {[Measures].[Value]} ON COLUMNS,
+  NON EMPTY DESCENDANTS([Departure Airport].[Geography].[Province].&[上海],
+                        [Departure Airport].[Geography].[Airport]) ON ROWS
+FROM [FlightCube]

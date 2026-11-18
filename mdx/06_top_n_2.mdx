@@ -1,0 +1,12 @@
+-- Operation: Top N (Flight: Flight No, N = 10)
+-- Question: Which ten flight numbers have flown the most kilometres in total?
+-- Measure: Total Mileage
+-- Answer key: mdx/answers/06_top_n_2.sql
+-- TOPCOUNT of the Flight No level by mileage; Rank = position in the TOPCOUNT result.
+WITH SET [Top Flights] AS
+  TOPCOUNT([Flight].[Airline Flight].[Flight No].Members, 10, [Measures].[Total Mileage])
+MEMBER [Measures].[Value] AS [Measures].[Total Mileage]
+MEMBER [Measures].[Rank] AS RANK([Flight].[Airline Flight].CurrentMember, [Top Flights])
+SELECT {[Measures].[Rank], [Measures].[Value]} ON COLUMNS,
+  [Top Flights] ON ROWS
+FROM [FlightCube]

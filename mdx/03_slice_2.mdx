@@ -1,0 +1,10 @@
+-- Operation: Slice (Departure Airport = Beijing Capital)
+-- Question: Which landing airports are reached from Beijing Capital Airport (首都机场), and how many segments fly to each?
+-- Measure: Segment Count
+-- Answer key: mdx/answers/03_slice_2.sql
+-- Slice on departure airport 74 (首都机场, PEK); rows are the landing airports reached from it.
+WITH MEMBER [Measures].[Value] AS [Measures].[Segment Count]
+SELECT {[Measures].[Value]} ON COLUMNS,
+  NON EMPTY [Landing Airport].[Geography].[Airport].Members ON ROWS
+FROM [FlightCube]
+WHERE ([Departure Airport].[Geography].[Airport].&[74])

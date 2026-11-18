@@ -1,0 +1,13 @@
+-- Operation: Top N (Passenger: Workplace, N = 5)
+-- Question: Which five passenger workplaces account for the most segments (workplace 'Unknown' excluded)?
+-- Measure: Segment Count
+-- Answer key: mdx/answers/06_top_n_3.sql
+-- TOPCOUNT of workplaces after EXCEPT removes the 'Unknown' workplace member (NULL workplaces).
+WITH SET [Top Workplaces] AS
+  TOPCOUNT(EXCEPT([Passenger].[Workplace].[Workplace].Members, {[Passenger].[Workplace].&[Unknown]}),
+           5, [Measures].[Segment Count])
+MEMBER [Measures].[Value] AS [Measures].[Segment Count]
+MEMBER [Measures].[Rank] AS RANK([Passenger].[Workplace].CurrentMember, [Top Workplaces])
+SELECT {[Measures].[Rank], [Measures].[Value]} ON COLUMNS,
+  [Top Workplaces] ON ROWS
+FROM [FlightCube]
